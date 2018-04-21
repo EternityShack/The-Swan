@@ -89,6 +89,7 @@ public class theSwanScript : MonoBehaviour
 		bool solveLogged = false;
 		int systemResetCounter = 0;
 		bool solved = false;
+		bool failsafeHappening = false;
         string[] ignoredModules = { "Souvenir", "Forget Me Not", "Turn The Key", "The Swan" };
 
 		//Logging
@@ -709,6 +710,7 @@ public class theSwanScript : MonoBehaviour
 		//Failsafe
 		IEnumerator failsafe()
 		{
+		                failsafeHappening = true;
 				Debug.LogFormat("[The Swan #{0}] Failsafe sequence initiated.", moduleId);
 				solved = true;
 				keyboardLock = true;
@@ -984,6 +986,11 @@ public class theSwanScript : MonoBehaviour
             }
             execute.OnInteract();
             yield return new WaitForSeconds(0.1f);
+	    
+	    if (failsafeHappening)
+	    {
+	        yield return "solve";
+	    }
         }
         else if (split[0].Equals("time"))
         {
